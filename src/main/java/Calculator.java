@@ -1,3 +1,4 @@
+import java.util.Map;
 import java.util.Scanner;
 
 public class Calculator {
@@ -58,7 +59,7 @@ public class Calculator {
         }
         if (sb.length() > 0) {
             return sb.toString();
-        } else throw new RuntimeException("Неположительный результат операции с римскими цифрами: " + result);
+        } else throw new IllegalArgumentException("Неположительный результат операции с римскими цифрами: " + result);
     }
 
     private static int calculate(Formula formula) {
@@ -72,7 +73,7 @@ public class Calculator {
             case '/':
                 return (int) (formula.firstInt / formula.secondInt + 0.5);
             default:
-                throw new RuntimeException("нет операции");
+                throw new IllegalArgumentException("нет операции");
         }
     }
 
@@ -81,7 +82,7 @@ public class Calculator {
         if (s.contains("-")) return '-';
         if (s.contains("*")) return '*';
         if (s.contains("/")) return '/';
-        throw new RuntimeException("нет операции");
+        throw new IllegalArgumentException("нет операции");
     }
 
     private static Formula getNumbers(Formula formula) {
@@ -92,7 +93,7 @@ public class Calculator {
                 System.out.println("Валидные арабские цифры: " + formula.firstString + " , " + formula.secondString + " ; можно делать операцию");
                 return formula;
             } else {
-                throw new RuntimeException("Эти арабские цифры не от 1 до 10: " + formula.firstInt + " , " + formula.secondString);
+                throw new IllegalArgumentException("Эти арабские цифры не от 1 до 10: " + formula.firstInt + " , " + formula.secondString);
             }
         } catch (NumberFormatException e) {
             System.out.println("Это не арабские цифры..." + e);
@@ -110,30 +111,12 @@ public class Calculator {
         return num > 0 && num < 11;
     }
 
-    private static int isValid(String number) {
-        switch (number) {
-            case "I":
-                return 1;
-            case "II":
-                return 2;
-            case "III":
-                return 3;
-            case "IV":
-                return 4;
-            case "V":
-                return 5;
-            case "VI":
-                return 6;
-            case "VII":
-                return 7;
-            case "VIII":
-                return 8;
-            case "IX":
-                return 9;
-            case "X":
-                return 10;
-            default:
-                throw new RuntimeException("Это не арабская цифра и не римская от I до X: " + number);
+    public static int isValid(String number) {
+        Map<String, Integer> map = Map.of("I", 1, "II",2, "III", 3, "IV", 4, "V", 5, "VI", 6, "VII", 7, "VIII", 8, "IX", 9, "X", 10);
+        try {
+            return map.get(number);
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException("Это не арабская цифра и не римская от I до X: " + number, e);
         }
     }
 }
